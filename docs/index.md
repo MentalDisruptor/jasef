@@ -1,4 +1,3 @@
-#JASeF
 ## Welcome to JASeF
 
 JASeF is an acronym and stands for "Just Another Selenium-based Framework".
