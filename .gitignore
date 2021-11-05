@@ -175,3 +175,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# http://www.sonarlint.org/commandline/
+# SonarLint working directories, configuration files (including credentials)
+.sonarlint/
