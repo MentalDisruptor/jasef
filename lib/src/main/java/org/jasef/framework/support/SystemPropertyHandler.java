@@ -6,10 +6,14 @@ import org.jasef.framework.base.throwables.DriverNotCreatedException;
 @Slf4j
 public class SystemPropertyHandler {
 
+    private SystemPropertyHandler() {
+        // hide the implicit public constructor
+    }
+
     /**
      * Gets the value of a system property
      * @param property desired system property
-     * @return the system property value, {@code null} on failure
+     * @return the system property value, or {@code null} on failure or when the key not exists
      */
     public static String get(String property) {
         try {
