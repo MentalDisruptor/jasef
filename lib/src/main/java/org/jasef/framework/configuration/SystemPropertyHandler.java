@@ -1,4 +1,4 @@
-package org.jasef.framework.support;
+package org.jasef.framework.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jasef.framework.base.throwables.DriverNotCreatedException;
@@ -7,7 +7,7 @@ import org.jasef.framework.base.throwables.DriverNotCreatedException;
 public class SystemPropertyHandler {
 
     private SystemPropertyHandler() {
-        // hide the implicit public constructor
+        // private constructor to hide the implicit public one
     }
 
     /**
@@ -21,9 +21,11 @@ public class SystemPropertyHandler {
         } catch (RuntimeException runtimeException) {
             // warn about encountered runtime exceptions, but don't act on them
             log.warn(
-                    "Failed getting System property value due to {}, will return null value.",
-                    runtimeException.getClass().getName()
+                    "Cannot to read system property \"{}\".",
+                    property
             );
+            // provide some more information on debug loglevel.
+            log.debug(runtimeException.getMessage(), runtimeException);
         }
         return null;
     }
