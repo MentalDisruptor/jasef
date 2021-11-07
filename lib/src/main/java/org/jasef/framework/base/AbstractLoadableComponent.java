@@ -1,19 +1,14 @@
 package org.jasef.framework.base;
 
 import com.google.inject.Provides;
-import org.jasef.framework.base.throwables.DriverNotCreatedException;
 import org.jasef.framework.driver.DriverType;
-import org.jasef.framework.support.SystemPropertyHandler;
+import org.jasef.framework.configuration.SystemPropertyHandler;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.opera.OperaDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.LoadableComponent;
-
-import java.awt.*;
-import java.text.MessageFormat;
 
 public abstract class AbstractLoadableComponent<P extends AbstractLoadableComponent<P>>
         extends LoadableComponent<AbstractLoadableComponent<P>> {
@@ -40,7 +35,8 @@ public abstract class AbstractLoadableComponent<P extends AbstractLoadableCompon
     @SuppressWarnings({"java:S125"})
     @Provides
     public WebDriver provideDriver() {
-        DriverType driverType = DriverType.valueOf(SystemPropertyHandler.get("driverType"));
+        // TODO fix driverType configuration when configuration implementation is finalized
+        DriverType driverType = DriverType.valueOf(SystemPropertyHandler.get("driverType").toUpperCase());
         // TODO driver configurations and plain object return by appropriately configured driver
         return switch (driverType) {
             case CHROME -> new ChromeDriver();

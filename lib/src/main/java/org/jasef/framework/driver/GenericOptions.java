@@ -6,12 +6,12 @@ import org.openqa.selenium.Capabilities;
 import java.lang.reflect.InvocationTargetException;
 
 @Slf4j
-public class BrowserConfiguration<T>{
+public class GenericOptions<T>{
 
     Class<T> typeArgumentClass;
     T browserType = null;
 
-    public BrowserConfiguration(Class<T> typeArgumentClass) {
+    public GenericOptions(Class<T> typeArgumentClass) {
         this.typeArgumentClass = typeArgumentClass;
     }
 
@@ -20,7 +20,7 @@ public class BrowserConfiguration<T>{
      * If creating a new {@link Capabilities} object fails for any reason, {@code null} will be returned.
      * @return browser-specific {@link Capabilities} object
      */
-    public T get() {
+    public T create() {
         try {
             browserType = typeArgumentClass.getDeclaredConstructor().newInstance();
         } catch (InvocationTargetException invocationTargetException) {

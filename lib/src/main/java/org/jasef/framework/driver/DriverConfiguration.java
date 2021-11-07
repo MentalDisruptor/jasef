@@ -35,9 +35,7 @@ public class DriverConfiguration {
     }
 
     public RemoteWebDriver getChromeRemote() {
-        ChromeOptions chromeOptions = new BrowserConfiguration<>(ChromeOptions.class).get();
-        chromeOptions.setAcceptInsecureCerts(true);
-        chromeOptions.setCapability("intl.lang", "de");
+        ChromeOptions chromeOptions = new GenericOptions<>(ChromeOptions.class).create();
         try {
             return new RemoteWebDriver(new URL("http://grid4host:4444/"), chromeOptions);
         } catch (MalformedURLException malformedURLException) {
