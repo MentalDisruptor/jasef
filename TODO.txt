@@ -1,0 +1,2 @@
+Non-Code:
+* think about LGPLv3 instead of GPLv3
