@@ -24,4 +24,10 @@ public interface IConfiguration {
      * @return value of key that was deleted, null if given key was not found or could not be deleted.
      */
     public String delete(String key);
+
+    /**
+     * Deletes an entire configuration store.
+     * @return {@code true} if deletion was successful, {@code false} otherwise
+     */
+    public boolean deleteConfigStore();
 }

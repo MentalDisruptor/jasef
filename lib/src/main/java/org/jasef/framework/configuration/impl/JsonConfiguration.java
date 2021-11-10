@@ -35,7 +35,7 @@ public class JsonConfiguration implements IConfiguration {
                 jsonConfig = mapper.readValue(file, Map.class);
             } catch (IOException e) {
                 log.error("Could not parse JSON configuration");
-                log.error("Caught {} with message {}", e.getClass(), e.getMessage(), e);
+                log.error("Caught {} with message \"{}\"", e.getClass(), e.getMessage(), e);
             }
         }
 
@@ -79,7 +79,7 @@ public class JsonConfiguration implements IConfiguration {
 
     /**
      * Stores mapped configuration to the corresponding json file;
-     * @return
+     * @return {@code true} if saving was successful, {@code false} otherwise
      */
     private boolean saveToFile() {
         ObjectMapper mapper = new ObjectMapper();
@@ -98,5 +98,14 @@ public class JsonConfiguration implements IConfiguration {
             );
             return false;
         }
+    }
+
+    /**
+     * Deletes the configuration file from disk entirely.
+     * @return {@code true} if deleting was successful, {@code false} otherwise
+     */
+    public boolean deleteConfigStore() {
+        // TODO check SonarLint issue below
+        return file.delete();
     }
 }
