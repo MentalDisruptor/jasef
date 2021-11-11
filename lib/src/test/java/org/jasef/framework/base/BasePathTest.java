@@ -9,17 +9,17 @@ import java.nio.file.Paths;
 @Slf4j
 class BasePathTest implements WithAssertions {
 
-    @Test
-    void getBasePathTest() {
-        BasePath basePath = new BasePath();
-        assertThat(basePath.getBasePath())
-                .withFailMessage("Base path does not exist")
-                .exists();
-        assertThat(basePath.getBasePath())
-                .withFailMessage("Base path is not a directory")
-                .isDirectory();
-        assertThat(basePath.getBasePath())
-                .withFailMessage("Base path is not readable")
-                .isReadable();
-    }
+  @Test
+  void getBasePathTest() {
+    BasePath basePath = new BasePath();
+    assertThat(basePath.getBasePath())
+        .withFailMessage("Base path does not exist")
+        .exists();
+    assertThat(basePath.getBasePath())
+        .withFailMessage("Base path is not a directory")
+        .isDirectory();
+    assertThat(basePath.getBasePath())
+        .withFailMessage("Base path is not readable")
+        .isReadable();
+  }
 }

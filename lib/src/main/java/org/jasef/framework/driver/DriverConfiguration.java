@@ -14,36 +14,36 @@ import java.net.URL;
 @Slf4j
 public class DriverConfiguration {
 
-    public DriverConfiguration() {
-        throw new UnsupportedOperationException("implementation pending");
-    }
+  public DriverConfiguration() {
+    throw new UnsupportedOperationException("implementation pending");
+  }
 
-    public ChromeDriver getChrome(){
-        return new ChromeDriver();
-    }
+  public ChromeDriver getChrome() {
+    return new ChromeDriver();
+  }
 
-    public FirefoxDriver getFirefox() {
-        return new FirefoxDriver();
-    }
+  public FirefoxDriver getFirefox() {
+    return new FirefoxDriver();
+  }
 
-    public SafariDriver getSafari() {
-        return new SafariDriver();
-    }
+  public SafariDriver getSafari() {
+    return new SafariDriver();
+  }
 
-    public OperaDriver getOpera() {
-        return new OperaDriver();
-    }
+  public OperaDriver getOpera() {
+    return new OperaDriver();
+  }
 
-    public RemoteWebDriver getChromeRemote() {
-        ChromeOptions chromeOptions = new GenericOptions<>(ChromeOptions.class).create();
-        try {
-            return new RemoteWebDriver(new URL("http://grid4host:4444/"), chromeOptions);
-        } catch (MalformedURLException malformedURLException) {
-            return null;
-        }
+  public RemoteWebDriver getChromeRemote() {
+    ChromeOptions chromeOptions = new GenericOptions<>(ChromeOptions.class).create();
+    try {
+      return new RemoteWebDriver(new URL("http://grid4host:4444/"), chromeOptions);
+    } catch (MalformedURLException malformedURLException) {
+      return null;
     }
+  }
 
-    public RemoteWebDriver getFirefoxRemote() {
-        return null;
-    }
+  public RemoteWebDriver getFirefoxRemote() {
+    return null;
+  }
 }
