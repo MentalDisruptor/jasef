@@ -1,6 +1,7 @@
 package org.jasef.framework.configuration.impl;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -25,14 +26,16 @@ public class JsonConfiguration implements IConfiguration {
     /**
      * Gets the value for the given key from JSON configuration
      * @param key the name of the property to be retrieved
-     * @return
+     * @return {@link String} value for the given property key
      */
     @Override
     public String get(String key) {
         if (jsonConfig.isEmpty()) {
             ObjectMapper mapper = new ObjectMapper();
+            TypeReference<HashMap<String, Object>> typeReference
+                    = new TypeReference<>() {};
             try {
-                jsonConfig = mapper.readValue(file, Map.class);
+                jsonConfig = mapper.readValue(file, typeReference);
             } catch (IOException e) {
                 log.error("Could not parse JSON configuration");
                 log.error("Caught {} with message \"{}\"", e.getClass(), e.getMessage(), e);
