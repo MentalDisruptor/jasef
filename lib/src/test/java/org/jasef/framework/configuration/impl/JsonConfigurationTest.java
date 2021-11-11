@@ -16,6 +16,7 @@ class JsonConfigurationTest implements WithAssertions {
 
   @BeforeEach
   void setUp() {
+    //noinspection ConstantConditions
     File configFile = new File(
         JsonConfigurationTest.class
             .getClassLoader()
@@ -37,14 +38,17 @@ class JsonConfigurationTest implements WithAssertions {
     BasePath basePath = new BasePath();
     File testConfigFile = new File(
         basePath.getBasePath().toFile().getPath() + File.separator + "unitTest.json");
-    testConfigFile.createNewFile();
-    IConfiguration testConfig = new JsonConfiguration(testConfigFile.getPath());
-    assertThat(testConfig.store("unitTestKey", "unitTestValue"))
-        .withFailMessage("storing entry unsuccessful")
-        .isEqualTo("unitTestValue");
-    assertThat(testConfig.delete("unitTestKey"))
-        .withFailMessage("deleting entry unsuccessful")
-        .isEqualTo("unitTestValue");
+    if (testConfigFile.createNewFile()) {
+      IConfiguration testConfig = new JsonConfiguration(testConfigFile.getPath());
+      assertThat(testConfig.store("unitTestKey", "unitTestValue"))
+          .withFailMessage("storing entry unsuccessful")
+          .isEqualTo("unitTestValue");
+      assertThat(testConfig.delete("unitTestKey"))
+          .withFailMessage("deleting entry unsuccessful")
+          .isEqualTo("unitTestValue");
+    } else {
+      fail("Could not create config file");
+    }
   }
 
   @Test
@@ -77,6 +81,7 @@ class JsonConfigurationTest implements WithAssertions {
     File unitTestJson = new File(
         basePath.getBasePath().toFile().getPath() + File.separator + "unitTest.json");
     if (unitTestJson.exists()) {
+      //noinspection ResultOfMethodCallIgnored
       unitTestJson.delete();
     }
   }
