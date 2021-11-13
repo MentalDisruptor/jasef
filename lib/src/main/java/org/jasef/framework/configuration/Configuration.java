@@ -1,6 +1,6 @@
 package org.jasef.framework.configuration;
 
-public interface IConfiguration {
+public interface Configuration {
 
   /**
    * Reads the configuration property for the given key from a configuration store.
@@ -8,17 +8,16 @@ public interface IConfiguration {
    * @param key the name of the property to be retrieved
    * @return the string value for the given key
    */
-  public String get(String key);
+  String get(String key);
 
   /**
    * Stores a configuration value for the given key in configuration.
    *
    * @param key   key to store configuration value for
    * @param value value to store with provided key
-   * @return the configuration value stored under given key, {@code null} if storage was not
-   * successful
+   * @return the previous value mapped with the given key, or {@code null} if there was no mapping.
    */
-  public String store(String key, String value);
+  String store(String key, String value);
 
   /**
    * Deletes a configuration key from storage.
@@ -26,12 +25,12 @@ public interface IConfiguration {
    * @param key key to delete
    * @return value of key that was deleted, null if given key was not found or could not be deleted.
    */
-  public String delete(String key);
+  String delete(String key);
 
   /**
    * Deletes an entire configuration store.
    *
    * @return {@code true} if deletion was successful, {@code false} otherwise
    */
-  public boolean deleteConfigStore();
+  boolean deleteConfigStore();
 }

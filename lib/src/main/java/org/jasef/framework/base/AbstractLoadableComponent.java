@@ -1,8 +1,9 @@
 package org.jasef.framework.base;
 
 import com.google.inject.Provides;
+import org.jasef.framework.configuration.Configuration;
+import org.jasef.framework.configuration.impl.SystemPropertiesConfiguration;
 import org.jasef.framework.driver.DriverType;
-import org.jasef.framework.configuration.SystemPropertyHandler;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -38,8 +39,9 @@ public abstract class AbstractLoadableComponent<P extends AbstractLoadableCompon
   @Provides
   public WebDriver provideDriver() {
     // TODO fix driverType configuration when configuration implementation is finalized
+    Configuration driverConfiguration = new SystemPropertiesConfiguration();
     DriverType driverType = DriverType.valueOf(
-        SystemPropertyHandler.get("driverType").toUpperCase());
+        driverConfiguration.get("driverType").toUpperCase());
     // TODO driver configurations and plain object return by appropriately configured driver
     return switch (driverType) {
       case CHROME -> new ChromeDriver();
