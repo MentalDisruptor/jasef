@@ -7,8 +7,6 @@ import org.jasef.framework.driver.DriverType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.opera.OperaDriver;
-import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.LoadableComponent;
 
 public abstract class AbstractLoadableComponent<P extends AbstractLoadableComponent<P>>
@@ -46,8 +44,6 @@ public abstract class AbstractLoadableComponent<P extends AbstractLoadableCompon
     return switch (driverType) {
       case CHROME -> new ChromeDriver();
       case FIREFOX -> new FirefoxDriver();
-      case SAFARI -> new SafariDriver();
-      case OPERA -> new OperaDriver();
       case REMOTE -> null;
     };
   }

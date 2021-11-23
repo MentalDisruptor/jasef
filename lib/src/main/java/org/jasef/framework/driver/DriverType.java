@@ -3,9 +3,7 @@ package org.jasef.framework.driver;
 public enum DriverType {
   CHROME("chrome"),
   FIREFOX("firefox"),
-  OPERA("opera"),
-  REMOTE("remote"),
-  SAFARI("safari");
+  REMOTE("remote");
 
   String type;
 
