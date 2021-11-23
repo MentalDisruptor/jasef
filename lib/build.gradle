@@ -35,9 +35,7 @@ dependencies {
     testImplementation 'org.projectlombok:lombok:1.18.22'
 
     // logging dependencies - these need to be revised before doing actual releases
-    implementation 'org.slf4j:slf4j-simple:1.7.32'
     runtimeOnly 'org.slf4j:slf4j-simple:1.7.32'
-    testImplementation 'org.slf4j:slf4j-simple:1.7.32'
     testRuntimeOnly 'org.slf4j:slf4j-simple:1.7.32'
 
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
