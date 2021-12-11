@@ -1,5 +1,7 @@
 package org.jasef.framework.configuration;
 
+import org.jasef.framework.configuration.exception.ConfigurationStorageException;
+
 public interface Configuration {
 
   /**
@@ -16,8 +18,9 @@ public interface Configuration {
    * @param key   key to store configuration value for
    * @param value value to store with provided key
    * @return the previous value mapped with the given key, or {@code null} if there was no mapping.
+   * @throws ConfigurationStorageException when configuration provider does not support storing
    */
-  String store(String key, String value);
+  String store(String key, String value) throws ConfigurationStorageException;
 
   /**
    * Deletes a configuration key from storage.

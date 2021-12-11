@@ -2,6 +2,7 @@ package org.jasef.framework.configuration.impl;
 
 import org.assertj.core.api.WithAssertions;
 import org.jasef.framework.configuration.Configuration;
+import org.jasef.framework.configuration.exception.ConfigurationStorageException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ class SystemPropertiesConfigurationTest implements WithAssertions {
   }
 
   @Test
-  void testStore() {
+  void testStore() throws ConfigurationStorageException {
     assertThat(configuration.store(STORE_TEST_PROPERTY_KEY, TEST_PROPERTY_VALUE))
         .withFailMessage("Store System property failed")
         .isNull();
@@ -49,7 +50,7 @@ class SystemPropertiesConfigurationTest implements WithAssertions {
   @Test
   void testDeleteConfigStore() {
     assertThat(configuration.deleteConfigStore())
-        .withFailMessage("Unexptected config store deletion behavior")
+        .withFailMessage("Unexpected config store deletion behavior")
         .isTrue();
   }
 

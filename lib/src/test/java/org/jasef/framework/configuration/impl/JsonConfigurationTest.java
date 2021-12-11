@@ -1,15 +1,20 @@
 package org.jasef.framework.configuration.impl;
 
+import java.nio.file.Files;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.WithAssertions;
 import org.jasef.framework.base.BasePath;
 import org.jasef.framework.configuration.Configuration;
+import org.jasef.framework.configuration.exception.ConfigurationStorageException;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 
+@Slf4j
 class JsonConfigurationTest implements WithAssertions {
 
   private static final String UNIT_TEST_KEY = "unitTestKey";
@@ -21,15 +26,23 @@ class JsonConfigurationTest implements WithAssertions {
   Configuration configuration;
 
   @BeforeEach
-  void setUp() {
+  void setUp() throws IOException {
     //noinspection ConstantConditions
     File configFile = new File(
-        JsonConfigurationTest.class
+        this.getClass()
             .getClassLoader()
             .getResource("configuration/impl/config.json")
             .getFile()
     );
     configuration = new JsonConfiguration(configFile.getPath());
+    BasePath basePath = new BasePath();
+    File unitTestConfig = new File(basePath.getBasePath().toFile().getPath() + File.separator + FILENAME);
+    if (!unitTestConfig.exists()) {
+      Files.copy(
+          configFile.toPath(),
+          unitTestConfig.toPath()
+      );
+    }
   }
 
   @Test
@@ -40,24 +53,21 @@ class JsonConfigurationTest implements WithAssertions {
   }
 
   @Test
-  void testStoreAndDelete() throws IOException {
+  void testStoreAndDelete() throws IOException, ConfigurationStorageException {
     BasePath basePath = new BasePath();
+    log.debug(basePath.getBasePath().toFile().getAbsolutePath() + File.separator + FILENAME);
     File testConfigFile = new File(
         basePath.getBasePath().toFile().getPath() + File.separator + FILENAME);
-    if (testConfigFile.createNewFile()) {
-      Configuration testConfig = new JsonConfiguration(testConfigFile.getPath());
-      assertThat(testConfig.store(UNIT_TEST_KEY, UNIT_TEST_VALUE))
-          .withFailMessage("storing entry unsuccessful")
-          .isNull();
-      assertThat(testConfig.store(UNIT_TEST_KEY, UNIT_TEST_VALUE + "2"))
-          .withFailMessage("overwriting entry unsuccessful")
-          .isEqualTo(UNIT_TEST_VALUE);
-      assertThat(testConfig.delete("unitTestKey"))
-          .withFailMessage("deleting entry unsuccessful")
-          .isEqualTo(UNIT_TEST_VALUE + "2");
-    } else {
-      fail("Could not create config file");
-    }
+    Configuration testConfig = new JsonConfiguration(testConfigFile.getPath());
+    assertThat(testConfig.store(UNIT_TEST_KEY, UNIT_TEST_VALUE))
+        .withFailMessage("storing entry unsuccessful")
+        .isNull();
+    assertThat(testConfig.store(UNIT_TEST_KEY, UNIT_TEST_VALUE + "2"))
+        .withFailMessage("overwriting entry unsuccessful")
+        .isEqualTo(UNIT_TEST_VALUE);
+    assertThat(testConfig.delete("unitTestKey"))
+        .withFailMessage("deleting entry unsuccessful")
+        .isEqualTo(UNIT_TEST_VALUE + "2");
   }
 
   @Test
@@ -81,6 +91,15 @@ class JsonConfigurationTest implements WithAssertions {
       assertThat(testConfig.deleteConfigStore()).isTrue();
     } else {
       fail("Test config file could not be created");
+    }
+  }
+
+  @AfterEach
+  void tearDown() throws IOException {
+    BasePath basePath = new BasePath();
+    File unitTestConfig = new File(basePath.getBasePath().toFile().getPath() + File.separator + FILENAME);
+    if (unitTestConfig.exists()) {
+      Files.delete(unitTestConfig.toPath());
     }
   }
 

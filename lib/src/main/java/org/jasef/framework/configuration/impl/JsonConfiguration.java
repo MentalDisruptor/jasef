@@ -5,18 +5,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.jasef.framework.base.BasePath;
+import org.jasef.framework.configuration.ConfigFile;
 import org.jasef.framework.configuration.Configuration;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 public class JsonConfiguration implements Configuration {
 
-  File file;
+  private final ConfigFile configFile;
   Map<String, Object> jsonConfig = new HashMap<>();
 
   /**
@@ -25,7 +25,27 @@ public class JsonConfiguration implements Configuration {
    * @param filename filename configuration is to be read from and stored to
    */
   public JsonConfiguration(@NonNull String filename) {
-    this.file = new BasePath().getBasePath().resolve(filename).toFile();
+    this.configFile = new ConfigFile(filename);
+  }
+
+  private Map<String, Object> initConfig() {
+    if (!this.configFile.exists()) {
+      this.configFile.createFile();
+      return Collections.emptyMap();
+    }
+
+    ObjectMapper mapper = new ObjectMapper();
+    TypeReference<HashMap<String, Object>> typeReference
+        = new TypeReference<>() {
+    };
+
+    try {
+      return mapper.readValue(this.configFile.getFile(), typeReference);
+    } catch (IOException e) {
+      log.error("Could not parse JSON configuration");
+      log.error("Caught {} with message \"{}\"", e.getClass(), e.getMessage(), e);
+      return Collections.emptyMap();
+    }
   }
 
   /**
@@ -37,23 +57,13 @@ public class JsonConfiguration implements Configuration {
    */
   @Override
   public String get(String key) {
-    if (!this.file.exists()) {
-      this.file = createConfigFile();
-      return null;
-    }
     if (jsonConfig.isEmpty()) {
-      ObjectMapper mapper = new ObjectMapper();
-      TypeReference<HashMap<String, Object>> typeReference
-          = new TypeReference<>() {
-      };
-      try {
-        jsonConfig = mapper.readValue(this.file, typeReference);
-      } catch (IOException e) {
-        log.error("Could not parse JSON configuration");
-        log.error("Caught {} with message \"{}\"", e.getClass(), e.getMessage(), e);
-      }
+      jsonConfig = initConfig();
     }
-    return (String) jsonConfig.get(key);
+    if (jsonConfig != null) {
+      return (String) jsonConfig.get(key);
+    }
+    return null;
   }
 
   /**
@@ -67,9 +77,13 @@ public class JsonConfiguration implements Configuration {
    */
   @Override
   public String store(String key, String value) {
-    if (!this.file.exists()) {
-      this.file = createConfigFile();
+    if (!configFile.exists()) {
+      configFile.createFile();
       return null;
+    }
+
+    if (jsonConfig.isEmpty()) {
+      jsonConfig = initConfig();
     }
 
     if (saveToFile()) {
@@ -87,7 +101,10 @@ public class JsonConfiguration implements Configuration {
    */
   @Override
   public String delete(String key) {
-    if (jsonConfig.containsKey(key)) {
+    if (jsonConfig.isEmpty()) {
+      jsonConfig = initConfig();
+    }
+    if ((jsonConfig != null) && (jsonConfig.containsKey(key))) {
       String value = (String) jsonConfig.remove(key);
       if (saveToFile()) {
         return value;
@@ -104,12 +121,12 @@ public class JsonConfiguration implements Configuration {
   private boolean saveToFile() {
     ObjectMapper mapper = new ObjectMapper();
     try {
-      mapper.writeValue(this.file, jsonConfig);
+      mapper.writeValue(configFile.getFile(), jsonConfig);
       return true;
     } catch (JsonGenerationException jsonGenerationException) {
       return false;
     } catch (IOException ioException) {
-      log.error("Unable to write configuration file '{}'", file.getAbsolutePath());
+      log.error("Unable to write configuration file '{}'", configFile.getFile().getAbsolutePath());
       log.debug(
           "Caught {} with message '{}'",
           ioException.getClass(),
@@ -127,21 +144,6 @@ public class JsonConfiguration implements Configuration {
    */
   public boolean deleteConfigStore() {
     // TODO check SonarLint issue below
-    return file.delete();
-  }
-
-  private File createConfigFile() {
-    if (!this.file.exists()) {
-      boolean created;
-      try {
-        created = this.file.createNewFile();
-      } catch (IOException e) {
-        return null;
-      }
-      if (created) {
-        return file;
-      }
-    }
-    return null;
+    return configFile.getFile().delete();
   }
 }
